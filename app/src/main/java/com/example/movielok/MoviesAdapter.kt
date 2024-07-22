@@ -9,7 +9,7 @@ import com.example.movielok.databinding.ItemMovieBinding
 import com.example.movielok.models.Movie
 
 class MoviesAdapter(
-    private val movies: List<Movie>,
+    private var movies: List<Movie>,
     private val onItemClick: (Movie) -> Unit
 ) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
@@ -39,4 +39,9 @@ class MoviesAdapter(
     }
 
     override fun getItemCount(): Int = movies.size
+
+    fun updateMovies(newMovies: List<Movie>) {
+        this.movies = newMovies
+        notifyDataSetChanged()
+    }
 }

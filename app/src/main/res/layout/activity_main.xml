@@ -1,10 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/appTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Movielok"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:paddingBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search to add movie"
+        android:padding="8dp"
+        android:background="@drawable/search_edit_text_background"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/moviesRecyclerView"
+        android:id="@+id/searchResultsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/watchlistButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Watchlist"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/viewedListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Viewed List"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>
