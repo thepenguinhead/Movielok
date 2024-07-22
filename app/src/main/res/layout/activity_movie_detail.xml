@@ -1,66 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:context=".MovieDetailActivity">
 
         <ImageView
             android:id="@+id/posterImageView"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="300dp"
             android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/titleTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:paddingTop="16dp" />
-
-        <TextView
-            android:id="@+id/releaseDateTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingTop="8dp" />
-
-        <TextView
-            android:id="@+id/voteAverageTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingTop="8dp" />
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp" />
 
         <TextView
             android:id="@+id/overviewTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:paddingTop="8dp" />
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/releaseDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:id="@+id/voteAverageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:paddingBottom="8dp" />
 
         <Button
             android:id="@+id/addToWatchlistButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add to Watchlist"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:layout_marginTop="16dp"/>
+            android:text="@string/add_to_watchlist" />
 
         <Button
             android:id="@+id/markAsViewedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mark as Viewed"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:layout_marginTop="16dp"/>
-
+            android:text="@string/mark_as_viewed" />
     </LinearLayout>
-</ScrollView>
+</layout>

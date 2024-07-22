@@ -3,74 +3,103 @@ package com.example.movielok
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movielok.databinding.ActivityMainBinding
 import com.example.movielok.models.Movie
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val apiService by lazy { ApiClient.retrofit.create(MovieApiService::class.java) }
-    private lateinit var searchAdapter: MoviesAdapter
+    private val mainViewModel: MainViewModel by viewModels()
+    private lateinit var moviesAdapter: MoviesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.searchResultsRecyclerView.layoutManager = LinearLayoutManager(this)
-        searchAdapter = MoviesAdapter(emptyList()) { movie -> navigateToDetails(movie) }
-        binding.searchResultsRecyclerView.adapter = searchAdapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        moviesAdapter = MoviesAdapter(emptyList()) { movie ->
+            navigateToDetails(movie)
+        }
+        binding.recyclerView.adapter = moviesAdapter
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s.toString()
-                if (query.isNotEmpty()) {
-                    searchMovies(query)
-                } else {
-                    binding.searchResultsRecyclerView.visibility = View.GONE
-                }
+        mainViewModel.movies.observe(this, Observer { movies ->
+            movies?.let {
+                moviesAdapter.updateMovies(it)
+                Log.d("MainActivity", "Popular movies loaded: ${it.size}")
             }
-            override fun afterTextChanged(s: Editable?) {}
         })
 
+        mainViewModel.searchResults.observe(this, Observer { results ->
+            results?.let {
+                moviesAdapter.updateMovies(it)
+                Log.d("MainActivity", "Search results loaded: ${it.size}")
+            }
+        })
+
+        mainViewModel.error.observe(this, Observer { error ->
+            error?.let {
+                Log.e("MainActivity", "Error: $it")
+            }
+        })
+
+        // Fetch popular movies when the activity is created
+        mainViewModel.fetchPopularMovies(Constants.API_KEY)
+
         binding.watchlistButton.setOnClickListener {
+            hideKeyboard()
             val intent = Intent(this, WatchlistActivity::class.java)
             startActivity(intent)
         }
 
         binding.viewedListButton.setOnClickListener {
+            hideKeyboard()
             val intent = Intent(this, ViewedListActivity::class.java)
             startActivity(intent)
         }
-    }
 
-    private fun searchMovies(query: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = apiService.searchMovies("638d0ed1588f69da7c3bb522a3f804c2", query)
-            runOnUiThread {
-                if (response.results.isNotEmpty()) {
-                    searchAdapter.updateMovies(response.results)
-                    binding.searchResultsRecyclerView.visibility = View.VISIBLE
-                } else {
-                    binding.searchResultsRecyclerView.visibility = View.GONE
+        binding.searchEditText.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
+                val query = binding.searchEditText.text.toString()
+                if (query.isNotEmpty()) {
+                    mainViewModel.searchMovies(query, Constants.API_KEY)
+                    hideKeyboard()
                 }
+                true
+            } else {
+                false
+            }
+        }
+
+        binding.searchButton.setOnClickListener {
+            val query = binding.searchEditText.text.toString()
+            if (query.isNotEmpty()) {
+                mainViewModel.searchMovies(query, Constants.API_KEY)
+                hideKeyboard()
             }
         }
     }
 
     private fun navigateToDetails(movie: Movie) {
+        hideKeyboard()
         val intent = Intent(this, MovieDetailActivity::class.java).apply {
             putExtra("movie", movie)
         }
         startActivity(intent)
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        val currentFocus = currentFocus ?: View(this)
+        inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
     }
 }

@@ -1,6 +1,5 @@
-import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
-
-plugins {id("com.android.application")
+plugins {
+    id("com.android.application")
     alias(libs.plugins.jetbrains.kotlin.android)
     id("org.jetbrains.kotlin.plugin.parcelize")
 }
@@ -11,6 +10,8 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+        dataBinding = true // data binding
     }
 
     defaultConfig {
@@ -19,7 +20,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        buildConfigField("String", "TMDB_API_KEY", "\"638d0ed1588f69da7c3bb522a3f804c2\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,7 +43,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -51,12 +51,16 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
     // Moshi (JSON parsing)
     implementation("com.squareup.moshi:moshi-kotlin:1.12.0")
+    implementation("com.squareup.moshi:moshi-adapters:1.12.0")
+    implementation("com.squareup.moshi:moshi:1.12.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
     // OkHttp Logging Interceptor (for debugging network requests)
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
@@ -68,7 +72,16 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
-    //Gson
+    // Gson
     implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+
+    // ViewModel and LiveData
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.0")
+
 }
+
+
 

@@ -1,4 +1,3 @@
-// Movie.kt
 package com.example.movielok.models
 
 import android.os.Parcelable
